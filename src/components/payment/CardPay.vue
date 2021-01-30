@@ -90,7 +90,7 @@
                 })
             },
             closeCard(){
-                this.$emit('closePaymentDialog')
+                this.$emit('closePaymentDialog') //To'lov qismini birinchi bo'limi yakunlandi
             }
         },
     }

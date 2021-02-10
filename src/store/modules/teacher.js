@@ -2,18 +2,47 @@ import addTokenToAxios from './addTokenToAxios'
 import axios from "axios";
 
 const state = {
-    teacher: [],
-    teacher_of_subject: []
+        data: {
+            meta: {
+                current_page: 0
+            }
+        },
+    teacher_of_subject: [],
+    params: {
+        url: 'teacher?page=',
+        body: {},
+        method: 'get'
+    }
 };
 const mutations = {
-    SET_TEACHER: (state,data) => state.teacher = data,
-    SET_TEACHER_OF_SUBJECT: (state,data) => state.teacher_of_subject = data
+    SET_TEACHER: (state,data) => state.data = data,
+    setCurrentPage(state, data) {
+        state.data.meta['current_page'] = data;
+    },
+    SET_TEACHER_OF_SUBJECT: (state,data) => state.teacher_of_subject = data,
 };
 const getters = {
-    getTeachers: state => state.teacher,
-    getTeacherOfTheSubject: state => state.teacher_of_subject
+    getTeachers: state => state.data.data,
+    getTeacherOfTheSubject: state => state.teacher_of_subject,
+    getCurrentPage: state => state.data.meta.current_page
 };
 const actions = {
+    getList({commit, state}, params) {
+        return new Promise((resolve, reject) => {
+            addTokenToAxios();
+            axios[params.method](params.url + params.pageNumber, params.body)
+                .then(response => {
+                    commit('SET_TEACHER', response.data);
+                    state.params.url = params.url;
+                    state.params.body = params.body;
+                    state.params.method = params.method;
+                    commit('setCurrentPage', response.data.meta.current_page);
+                    return resolve(response)
+                }).catch(error => {
+                return reject(error)
+            })
+        })
+    },
     fetchTeacher({commit}){
         addTokenToAxios();
         axios.get('/teacher').then(response =>{
@@ -46,17 +75,6 @@ const actions = {
             })
         }))
     },
-    updateTeacherData({dispatch},payload){
-        addTokenToAxios();
-        return new Promise(((resolve, reject) => {
-            axios.put('/teacher/' + payload.id,payload).then(response =>{
-                dispatch('fetchTeacher');
-                resolve(response)
-            }).catch(error =>{
-                reject(error)
-            })
-        }))
-    }
 };
 
 export default {

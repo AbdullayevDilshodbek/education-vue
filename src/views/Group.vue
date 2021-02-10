@@ -56,6 +56,7 @@
                                 color="primary"
                                 v-bind="attrs"
                                 v-on="on"
+                                icon
                                 @click="openAddMemberDialogPage(item)"
                                 :color="item.status === 1 ? 'green' : 'error'" text rounded>
                             <v-icon

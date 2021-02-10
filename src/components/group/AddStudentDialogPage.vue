@@ -40,7 +40,7 @@
                                     v-bind="attrs"
                                     v-on="on"
                                     text rounded small @click="openPayDialog(item)">
-                                <v-icon color="#0BA3E4">mdi-cash</v-icon>
+                                <v-icon color="#0BA3E4">mdi-cash-plus</v-icon>
                             </v-btn>
                         </template>
                         <span>To'lov qilish</span>

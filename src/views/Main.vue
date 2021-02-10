@@ -3,9 +3,21 @@
         <v-navigation-drawer
                 v-model="drawer"
                 app
-                style="background-color: #1D2228;"
+                :width="!drawer ? '50' : '250'"
+                style="background-color: #1D2228; transition: width 0.8s"
                 permanent
         >
+            <v-row>
+                    <v-spacer></v-spacer>
+                    <v-btn text color="white"
+                           class="ma-2"
+                           @click="drawer = !drawer"
+                           style="transition: width 2s"
+                           rounded icon>
+                        <v-icon  v-text="drawer ? 'mdi-close-outline' : 'mdi-format-list-checkbox'">
+                        </v-icon></v-btn>
+
+            </v-row>
             <v-sheet
                     height="100"
                     style="background-color: #1D2228"
@@ -54,7 +66,7 @@
         name: "Main",
         data: () => ({
             cards: ['Today', 'Yesterday'],
-            drawer: null,
+            drawer: true,
             test: false,
             links: [
                 ['mdi-account-key', 'Foydalanuvchilar', '/users'],

@@ -7,6 +7,7 @@ import Subject from "@/views/Subject";
 import Teacher from "@/views/Teacher"
 import Student from "../views/Student";
 import Group from "../views/Group";
+import Excel from "../views/Excel";
 
 Vue.use(VueRouter)
 
@@ -45,6 +46,11 @@ const routes = [
         path: '/group',
         name: 'Group',
         component: Group
+      },
+      {
+        path: '/excel',
+        name: 'Excel',
+        component: Excel
       }
     ]
   }

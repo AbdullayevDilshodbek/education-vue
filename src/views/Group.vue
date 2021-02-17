@@ -52,19 +52,34 @@
                 <v-tooltip bottom>
                     <template v-slot:activator="{ on, attrs }">
                         <v-btn
-                                :style="item.status && item.teacher.status ? 'display: inline' : 'display: none'"
-                                color="primary"
+                                color="green"
                                 v-bind="attrs"
                                 v-on="on"
                                 icon
                                 @click="openAddMemberDialogPage(item)"
-                                :color="item.status === 1 ? 'green' : 'error'" text rounded>
+                                text rounded>
                             <v-icon
                             >mdi-account-multiple-plus
                             </v-icon>
                         </v-btn>
                     </template>
                     <span>Guruhga o`quvchi qo`shish</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                                color="green"
+                                v-bind="attrs"
+                                v-on="on"
+                                icon
+                                @click="openAttendanceDialog(item)"
+                                text rounded>
+                            <v-icon
+                            >mdi-ballot-outline
+                            </v-icon>
+                        </v-btn>
+                    </template>
+                    <span>Davomad qilish</span>
                 </v-tooltip>
             </template>
         </v-data-table>
@@ -120,8 +135,17 @@
                   transition="dialog-top-transition"
                   scrollable
                   persistent
-                  v-model="addMembers"><AddStudentDialogPage :group="theGroup" @closeMemberDialog="closeMemberDialog"/></v-dialog>
+                  v-model="addMembers"><AddStudentDialogPage :group="theGroup" @closeMemberDialog="closeMemberDialog"/>
+        </v-dialog>
+        <v-dialog fullscreen
+                hide-overlay
+                transition="dialog-top-transition"
+                scrollable
+                v-model="attendance.show">
+            <Attendance @closeAttendanceDialog="attendance.show = false" :group="theGroup" @SendAttendance="SendAttendance"/>
+        </v-dialog>
         <Paginate store="group" collection="getGroups" method="getList"/>
+        <overlay :overlay="overlay"/>
     </v-app>
 </template>
 
@@ -130,16 +154,27 @@
     import AddStudentDialogPage from '../components/group/AddStudentDialogPage'
     import Paginate from '../components/Paginate'
     import CardGroup from '../components/group/CardGroup'
+    import Attendance from '../components/group/Attendance'
+    import Dialog from "../components/student/CardStudent";
+    import Overlay from '../components/overlay'
 
     export default {
         name: "Group",
         components: {
+            Dialog,
             AddStudentDialogPage,
             CardGroup,
-            Paginate
+            Attendance,
+            Paginate,
+            Overlay
         },
         data() {
             return {
+                overlay: false,
+                test: true,
+                attendance:{
+                    show:false
+                },
                 theGroup: {},
                 addMembers: false,
                 edit: false,
@@ -330,6 +365,36 @@
             closeMemberDialog(){
                 this.addMembers = false;
                 this.loadGroups()
+            },
+            openAttendanceDialog(item){
+                this.theGroup = {
+                    id: item.id,
+                    group_name: item.group_name
+                };
+                this.overlay = true;
+                this.$store.dispatch('group/fetchAttendance',item.id).then(()=>{
+                this.overlay = false;
+                this.attendance.show = true;
+                })
+            },
+            SendAttendance(sendData){
+                this.GroupAction({
+                    url:  'attendance?page=',
+                    pageNumber: 0,
+                    method: "post",
+                    body: sendData,
+                }).then(response =>{
+                    this.snackbar.show = true;
+                    this.snackbar.text = response.data.message;
+                    this.snackbar.color = 'success';
+                    this.attendance.show = false;
+                }).catch(error =>{
+                    this.snackbar.show = true;
+                    this.snackbar.text = Object.values(
+                        error.response.data.message
+                    )[0][0];
+                    this.snackbar.color = 'error'
+                })
             }
         }
     }

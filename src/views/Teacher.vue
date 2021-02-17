@@ -103,19 +103,7 @@
         <v-dialog v-model="add" fullscreen>
             <PaymentHistory :user_id="user.id" @closeDialog="add = false" @searchByTime="searchByTime" @clearDatePicker="clearDatePicker"/>
         </v-dialog>
-        <v-row justify="center">
-            <v-overlay
-                    z-index="10"
-                    :value="overlay"
-            >
-                <v-progress-circular
-                        :size="70"
-                        :width="7"
-                        color="primary"
-                        indeterminate
-                ></v-progress-circular>
-            </v-overlay>
-        </v-row>
+        <Overlay :overlay="overlay"/>
     </v-app>
 </template>
 
@@ -124,13 +112,15 @@
     import ConfirmDialog from '../components/Teacher/ConfirmDialog'
     import PaymentHistory from '../components/payment/PaymentHistory'
     import Paginate from '../components/Paginate'
+    import Overlay from '../components/overlay'
 
     export default {
         name: "Teacher",
         components: {
             ConfirmDialog,
             PaymentHistory,
-            Paginate
+            Paginate,
+            Overlay
         },
         data() {
             return {

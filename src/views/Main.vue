@@ -27,11 +27,11 @@
                         color="white"
                         size="64"
                 >
-                    <v-icon size="64">mdi-account</v-icon>
+                    <v-img sizes="64" aspect-ratio="2" src="../assets/admin.png"></v-img>
                 </v-avatar>
 
 
-                <div class="mx-auto ml-13 white--text">Dilshodbek</div>
+                <div class="mx-auto ml-14 white--text">John_Wick</div>
                 <v-divider style="background-color: #fceeff"></v-divider>
             </v-sheet>
 
@@ -74,6 +74,7 @@
                 ['mdi-account-group', 'O`qituvchilar', '/teacher'],
                 ['mdi-account-supervisor-circle-outline', 'Talabalar', '/student'],
                 ['mdi-adobe-acrobat', 'Guruhlar', '/group'],
+                ['mdi-microsoft-excel', 'Excel', '/excel'],
             ],
         }),
         created() {

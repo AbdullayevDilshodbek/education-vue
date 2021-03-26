@@ -1,7 +1,8 @@
 <template>
     <v-app>
-        {{getPaymentHistory}}
-        <export-excel :data="jsonData" :fields = "json_fields">Aka</export-excel>
+        <v-btn color="success">
+          <export-excel :data="jsonData" :fields = "json_fields">Test Excel</export-excel>
+        </v-btn>
     </v-app>
 </template>
 

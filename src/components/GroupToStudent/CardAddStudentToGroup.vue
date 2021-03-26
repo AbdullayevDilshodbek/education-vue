@@ -3,23 +3,25 @@
         <v-snackbar timeout="1000" top right v-model="snackbar.show" :color="snackbar.color">
             {{snackbar.text}}
         </v-snackbar>
-        <v-card-title style="background-color: #21b421; color: white">Google</v-card-title>
+        <v-card-title style="background-color: #21b421; color: white">{{group.group_name}}</v-card-title>
         <v-card-text class="mt-1">
             <v-divider></v-divider>
             <v-form>
-                <v-autocomplete
+                <v-combobox
                         dense
                         outlined
                         label="Student ni tanlang"
                         :items="getActiveStudents"
                         item-text="full_name"
                         item-value="id"
+                        return-object
                         append-icon="mdi-plus-circle"
-                        v-model="member.student_id"
+                        v-model="student"
+                        @keydown="searchStudent"
                         id="icon-plus"
                         @click:append="openStudentCard"
                 >
-                </v-autocomplete>
+                </v-combobox>
                 <v-combobox dense label="Shu oy uchun to`lov qismi (%)"
                             outlined
                             :items="pay_part_ary"
@@ -40,8 +42,13 @@
             <v-btn color="success" text @click="addNewMember">Saqlash</v-btn>
             <v-btn color="error" text @click="closeDialog_(false)">Bekor qilish</v-btn>
         </v-card-actions>
-        <v-dialog v-model="studentCard.show" width="400">
-            <CardStudent @closeDialog="closeStudentCard" @addStudent="addStudent" :student="student" :title="studentCard.title" :add="true"/>
+        <v-dialog v-model="dialog" width="400">
+            <CardStudent @closeDialog="closeStudentCard"
+                         @addStudent="addStudent"
+                         :student="student"
+                         :title="studentCard.title"
+                         :dialog.sync="dialog"
+                         :add="true"/>
         </v-dialog>
     </v-card>
 </template>
@@ -58,6 +65,7 @@
         },
         data() {
             return {
+              timer: '',
                 student: {
                     id: '',
                     first_name: '',
@@ -65,6 +73,7 @@
                     middle_name: '',
                     phone: '',
                 },
+              dialog: false,
                 studentCard: {
                     show: false,
                     title: 'Yangi Student qo`shish'
@@ -94,12 +103,14 @@
         },
         created() {
             this.fetchActiveStudents({})
+          this.student = this.getActiveStudents[0]
         },
         methods: {
             ...mapActions('student', ['fetchActiveStudents']),
             ...mapActions('group_to_student', ['StudentsOfGroup', 'getCurrentPage']),
             addNewMember() {
                 this.member.group_id = this.group.id;
+                this.member.student_id = this.student.id
                 this.StudentsOfGroup({
                     url: `/group_to_student?page=`,
                     pageNumber: this.getCurrentPage,
@@ -124,23 +135,31 @@
                     this.snackbar.color = 'error'
                 })
             },
+          searchStudent(){
+              clearTimeout(this.timer)
+            this.timer = setTimeout(() => {
+              this.fetchActiveStudents({
+                text: document.getElementById('icon-plus').value
+              })
+            },600)
+          },
             closeDialog_(check_add) {
                 this.member = {};
                 this.$emit('closeDialog', check_add);
             },
             openStudentCard(){
-                this.studentCard.show = true;
+                this.dialog = true;
                 this.student = {}
             },
             addStudent(){
-                this.studentCard.show = false;
+                this.dialog = false;
                 this.fetchActiveStudents({});
                 this.snackbar.show = true;
                 this.snackbar.color = 'success';
                 this.snackbar.text = "Student bazaga kiritldi";
             },
             closeStudentCard() {
-                this.studentCard.show = false
+                this.dialog = false
             }
         }
     }

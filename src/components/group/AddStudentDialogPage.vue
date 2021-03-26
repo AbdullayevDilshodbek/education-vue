@@ -82,7 +82,9 @@
 
     export default {
         name: "AddStudentDialogPage",
-        props: ["group"],
+        props: {
+          group : {}
+        },
         components: {
             Paginate,
             CardAddStudentToGroup,
@@ -180,11 +182,13 @@
             },
             openPayDialog(item) {
                 const promises = [
-                    this.$store.dispatch('student/fetchOneStudent', item.student.id),
+                    this.$store.dispatch('student/fetchActiveStudents', {
+                      student_id: item.student.id
+                    }),
                     this.$store.dispatch('group/fetchGroup', item.group.id)
                 ];
                 Promise.all(promises).then(() => {
-                    this.student.student_id = item.student.id;
+                    this.student = item.student;
                     this.student.group_id = item.group.id;
                     this.pay = true;
                 })

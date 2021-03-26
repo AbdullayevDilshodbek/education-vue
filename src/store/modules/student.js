@@ -2,78 +2,62 @@ import addTokenToAxios from './addTokenToAxios'
 import axios from "axios";
 
 const state = {
-    student: [],
-    students: [],
-    active_students: []
+    data: [],
+    active_students: [],
+    params: {
+        url: "student?page=",
+        body: {},
+        method: "get",
+    },
 };
 const mutations = {
-    SET_STUDENT: (state, data) => state.student = data,
-    SET_STUDENTS: (state, data) => state.students = data,
-    SET_ACTIVE_STUDENT: (state, data) => state.active_students = data
+    SET_STUDENTS: (state, data) => state.data = data,
+    SET_ACTIVE_STUDENT: (state, data) => state.active_students = data,
+    setCurrentPage(state, data) {
+        state.data.meta['current_page'] = data;
+    },
 };
 const getters = {
-    getStudent: state => state.student,
-    getStudents: state => state.students,
-    getActiveStudents: state => state.active_students
+    getStudents: state => state.data.data,
+    getActiveStudents: state => state.active_students,
+    getCurrentPage: state => state.data.meta.current_page
 };
 const actions = {
-    fetchStudent({commit}) {
-        addTokenToAxios();
-        axios.get('/student').then(response => {
-            commit('SET_STUDENTS', response.data.data)
-        }).catch(error => {
-            console.log(error)
+    getList({commit, state}, params) {
+        return new Promise((resolve, reject) => {
+            addTokenToAxios();
+            axios[params.method](params.url + params.pageNumber, params.body)
+                .then(response => {
+                    commit('SET_STUDENTS', response.data);
+                    state.params.url = params.url;
+                    state.params.body = params.body;
+                    state.params.method = params.method;
+                    return resolve(response)
+                }).catch(error => {
+                return reject(error)
+            })
         })
     },
-    fetchOneStudent({commit},student_id){
-        addTokenToAxios();
-        axios.get('/student/' + student_id).then(response => {
-            commit('SET_STUDENT', response.data.data)
-        }).catch(error => {
-            console.log(error)
-        })
+    universalCrud({state, commit, dispatch},param) {
+        return new Promise((resolve, reject) => {
+            addTokenToAxios()
+            axios[param.method]( param.url, param.body)
+                .then((res) => {
+                    resolve(res.data);
+                })
+                .catch((err) => {
+                    reject(err.response.data);
+                });
+        });
     },
     fetchActiveStudents({commit}, payload) {
-            addTokenToAxios();
-            axios.post('/student/get_active_students', payload).then(response => {
-                commit('SET_ACTIVE_STUDENT', response.data.data);
-            }).catch(error => {
-                return console.log(error)
-            })
+        addTokenToAxios();
+        axios.post('/student/get_active_students', payload).then(response => {
+            commit('SET_ACTIVE_STUDENT', response.data.data);
+        }).catch(error => {
+            return console.log(error)
+        })
     },
-    addNewStudent({dispatch}, payload) {
-        return new Promise(((resolve, reject) => {
-            addTokenToAxios();
-            axios.post('/student', payload).then(response => {
-                dispatch('fetchStudent');
-                return resolve(response)
-            }).catch(error => {
-                return reject(error)
-            })
-        }))
-    },
-    updateStudentData({dispatch}, payload) {
-        return new Promise(((resolve, reject) => {
-            addTokenToAxios();
-            axios.put('student/' + payload.id, payload).then(response => {
-                dispatch('fetchStudent');
-                return resolve(response)
-            }).catch(error => {
-                return reject(error)
-            })
-        }))
-    },
-    changeStudentStatus({dispatch}, payload) {
-        return new Promise(((resolve, reject) => {
-            addTokenToAxios();
-            axios.put('student/change_status/' + payload).then(response => {
-                dispatch("fetchStudent");
-                return resolve(response)
-            }).catch(error => {
-                return reject(error)
-            })
-        }))
-    }
 };
 
 export default {

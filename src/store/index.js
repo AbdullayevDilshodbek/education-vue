@@ -12,6 +12,7 @@ import group from "./modules/group";
 import group_to_student from "./modules/group_to_student";
 import payment from "./modules/payment";
 import paymentHistory from "./modules/paymentHistory";
+import currentDebt from "./modules/Tab/currentDebt"
 export default new Vuex.Store({
   state: {
   },
@@ -30,6 +31,7 @@ export default new Vuex.Store({
     group,
     group_to_student,
     payment,
-    paymentHistory
+    paymentHistory,
+    currentDebt
   }
 })

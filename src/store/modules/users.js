@@ -17,6 +17,7 @@ const mutations = {
 };
 const getters = {
     getUsers: state => state.data.data,
+    getCurrentPage: state => state.data.meta.current_page
 };
 
 const actions = {
@@ -33,7 +34,8 @@ const actions = {
         addTokenToAxios();
         axios.get('/users',{
             params:{
-                user_id: payload
+                user_id: payload.user_id,
+                search: payload.search
             }
         }).then(response =>{
             commit('SET_USER',response.data)

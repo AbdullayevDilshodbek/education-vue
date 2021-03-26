@@ -2,7 +2,12 @@ import addTokenToAxios from './addTokenToAxios'
 import axios from "axios";
 
 const state = {
-    subject: []
+    subject: [],
+    params: {
+        url: "/subject?page=",
+        body: {},
+        method: "get",
+    },
 }
 const mutations = {
     SET_SUBJECT: (state,data) => state.subject = data
@@ -20,7 +25,7 @@ const actions = {
       return new Promise(((resolve, reject) => {
           addTokenToAxios()
           axios.post('/subject', payload).then(response =>{
-               dispatch('fetchSubject')
+               dispatch('getList')
               return resolve(response)
           }).catch(error =>{
                 return reject(error)
@@ -31,7 +36,7 @@ const actions = {
         return new Promise(((resolve, reject) => {
             addTokenToAxios()
             axios.put('subject/' + payload.id,payload).then(response => {
-                dispatch('fetchSubject');
+                dispatch('getList');
                 return resolve(response)
             }).catch(error =>{
                 return reject(error)
@@ -42,16 +47,31 @@ const actions = {
         return new Promise(((resolve, reject) => {
             addTokenToAxios()
             axios.put('subject/change_status/'+ payload).then(response => {
-                dispatch('fetchSubject');
+                dispatch('getList');
                 return resolve(response)
             }).catch(error =>{
                 return reject(error)
             })
         }))
-    }
+    },
+    getList({commit, state}, params) {
+        return new Promise((resolve, reject) => {
+            addTokenToAxios();
+            axios[params.method](params.url + params.pageNumber, params.body)
+                .then(response => {
+                    commit('SET_SUBJECT', response.data);
+                    state.params.url = params.url;
+                    state.params.body = params.body;
+                    state.params.method = params.method;
+                    return resolve(response)
+                }).catch(error => {
+                return reject(error)
+            })
+        })
+    },
 }
 const getters = {
-    getSubjects: state => state.subject
+    getSubjects: state => state.subject.data
 }
 
 export default {

@@ -10,7 +10,7 @@
             <v-form @keyup.native.enter="">
                 <v-autocomplete
                         dense outlined label="Student"
-                        :items="getStudent"
+                        :items="getActiveStudents"
                         item-value="id"
                         item-text="full_name"
                         v-model="student.student_id"
@@ -59,12 +59,17 @@
             }
         },
         computed: {
-            ...mapGetters("student", ["getStudent"]),
+            ...mapGetters("student", ["getActiveStudents"]),
             ...mapGetters('group', ['getGroup']),
         },
-        methods: {
+      created() {
+          this.fetchActiveStudents({
+            student_id: this.student.id
+          })
+      },
+      methods: {
             ...mapActions("payment", ["PaymentActions"]),
-            ...mapActions("student", ["fetchOneStudent"]),
+            ...mapActions("student", ["fetchActiveStudents"]),
             ...mapActions("group", ["fetchGroup"]),
             pay(){
                 this.PaymentActions({

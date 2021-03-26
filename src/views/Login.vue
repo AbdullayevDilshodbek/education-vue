@@ -17,7 +17,7 @@
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions class="justify-center">
-            <v-btn type="submit"  color="success" @click="login">Kirish</v-btn>
+            <v-btn type="submit"  color="success" @click="login" @keyup.enter="login">Kirish</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -54,7 +54,7 @@ export default {
         password: this.password,
       }
       this.tokenOlish(params).then(response =>{
-        this.$router.push("/main")
+        this.$router.push("/")
       }).catch(error =>{
         this.snackbar.show = true
         this.snackbar.text = "Login yoki parol xato"

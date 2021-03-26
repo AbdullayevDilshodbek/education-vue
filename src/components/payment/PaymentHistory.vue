@@ -64,7 +64,7 @@
         },
         data() {
             return {
-                dates: [new Date().toJSON().substr(0, 8)+ "01",new Date().toJSON().substr(0, 10)],
+                dates: ['01/' + new Date().toLocaleString().substr(2, 7),new Date().toISOString().substr(0, 10)],
                 dateShow: false,
                 headers: [
                     {

@@ -7,9 +7,10 @@ import axios from "axios";
 import { VueMaskDirective } from 'v-mask';
 import excel from 'vue-json-excel';
 
+
 Vue.use(excel)
 Vue.config.productionTip = false;
-axios.defaults.baseURL = process.env.VUE_APP_BASE_URL
+axios.defaults.baseURL = process.env.VUE_APP_BASE_URL;
 Vue.directive('mask', VueMaskDirective);
 new Vue({
   router,

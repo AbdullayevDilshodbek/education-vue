@@ -17,7 +17,7 @@ export default {
   },
 
   data: () => ({
-    //
+    // github action test
   }),
 };
 </script>

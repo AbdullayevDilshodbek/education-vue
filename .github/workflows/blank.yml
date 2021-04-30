@@ -22,25 +22,19 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      - name: Installing project dependencies
-        run: npm install
-
-      - name: Building the project
-        run: npm run build
-      - name: Install Firebase CLI
-        run: npm install firebase-tools
-
-      - uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only hosting
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FirebaseDeploy }}
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+        - name: Checkout Repo
+          uses: actions/checkout@v2
+        - name: Create Node Environment
+          uses: actions/setup-node@v1
+          with: 
+            node-version: 12.x
+        - name: Install Packages and Build Application
+          run: |
+            npm install -g @vue/cli
+            npm install
+            npm run build
+        - name: Deploy
+          uses: s0/git-publish-subdir-action@develop
+          env:
+            FOLDER: dist
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

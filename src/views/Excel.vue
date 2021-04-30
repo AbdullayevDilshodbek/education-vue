@@ -1,4 +1,3 @@
-<h1>Github action tets</h1>
 <template>
     <v-app>
         <v-btn color="success">

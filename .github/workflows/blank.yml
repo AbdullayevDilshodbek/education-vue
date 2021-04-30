@@ -30,6 +30,8 @@ jobs:
 
       - name: Building the project
         run: npm run build
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
 
       - uses: w9jds/firebase-action@master
         with:

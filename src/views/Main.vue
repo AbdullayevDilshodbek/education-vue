@@ -37,9 +37,7 @@ export default {
     drawer: null,
     links: [
       ['mdi-inbox-arrow-down', 'Organization', '/'],
-      ['mdi-send', 'About', '/about'],
-      ['mdi-delete', 'Trash'],
-      ['mdi-alert-octagon', 'Spam'],
+      ['mdi-file-powerpoint-box', 'Position', '/position'],
     ],
     user: ''
   }),

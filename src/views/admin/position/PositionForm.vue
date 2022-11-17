@@ -2,15 +2,11 @@
     <v-dialog v-model="dialog" width="500" persistent>
         <v-card class="mx-auto">
             <v-card-title primary-title>
-
                 {{ actionTitle }}
             </v-card-title>
             <v-divider></v-divider>
             <v-card-text>
-                <v-text-field label="title..." v-model="organization.title"></v-text-field>
-                <v-autocomplete :items="otherOrganizations" item-value="id" outline v-model="organization.parent_id"
-                    item-text="title">
-                </v-autocomplete>
+                <v-text-field label="title..." v-model="position.title" required></v-text-field>
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
@@ -21,33 +17,27 @@
         </v-card>
     </v-dialog>
 </template>
-
 <script>
 export default {
-    name: 'organization-dialog',
+    name: 'PositionForm',
     data() {
         return {
             dialog: false,
             actionTitle: 'Create',
-            organization: {},
-            otherOrganizations: []
+            position: {},
         }
     },
     created(){
-        this.loadOrganizationTree(this.organization ? this.organization.id : null)
     },
     methods: {
-        setData(organization) {
-            this.organization = { ...organization }
+        setData(position) {
+            this.position = { ...position }
             this.actionTitle = 'Update'
             this.dialog = true
-        },
-        async loadOrganizationTree(id = null) {
-            const data = await this.$store.dispatch('organization/loadOrganizationTree', id)
-            this.otherOrganizations = [...data]
+            console.log(this.position.title);
         },
         save(){
-            if(this.organization.id > 0){
+            if(this.position.id > 0){
                 this.update()
             }else{
                 this.create()
@@ -55,26 +45,26 @@ export default {
         },
         async create(){
             try {
-                const res = await this.$store.dispatch('organization/create', this.organization)
-                this.$emit('reload')
-                this.$toast.success(res.data.message)
+                const res = await this.$store.dispatch('position/create', this.position)
+                this.$toast.success(res.message)
+                this.$emit('reload');
                 this.closeDialog()
             } catch (error) {
-                this.$toast.error(Object.values(error.response.data.message)[0][0])
+                this.$toast.error(error.response.data.message)
             }
         },
         async update() {
             try {
-                const res = await this.$store.dispatch('organization/update', this.organization)
+                const res = await this.$store.dispatch('position/update', this.position)
                 this.$toast.success(res.data.message)
-                await this.$emit('reload')
+                this.$emit('reload');
                 this.closeDialog()
             } catch (error) {
                 this.$toast.error(Object.values(error.response.data.message)[0][0])
             }
         },
         closeDialog() {
-            this.organization = {}
+            this.position = {}
             this.dialog = false
         }
     }

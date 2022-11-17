@@ -20,9 +20,9 @@ const routes = [
         component: () => loadView('admin/organization/Organization.vue')
       },
       {
-        path: '/about',
-        name: 'about',
-        component: () => loadView('About.vue')
+        path: '/position',
+        name: 'position',
+        component: () => loadView('admin/position/Position.vue')
       }
     ]
   },

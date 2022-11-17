@@ -3,7 +3,8 @@ import axios from "@/utils/axios"
 const state = {
     data: {
         meta: {
-            current_page: 1
+            current_page: 1,
+            last_page: 1
         }
     },
     organizations: []

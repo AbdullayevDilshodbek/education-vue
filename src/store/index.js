@@ -3,7 +3,8 @@ import Vuex from 'vuex';
 
 import auth from './modules/auth/index';
 import user from './modules/user/index';
-import organization from './modules/organization/index'
+import organization from './modules/organization/index';
+import position from './modules/position/index'
 
 Vue.use(Vuex)
 
@@ -11,6 +12,7 @@ export default new Vuex.Store({
   modules: {
     auth,
     user,
-    organization
+    organization,
+    position
   }
 })

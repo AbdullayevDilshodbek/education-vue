@@ -6,7 +6,7 @@
             </v-card-title>
             <v-divider></v-divider>
             <v-card-text>
-                <v-text-field label="title..." v-model="position.title" required></v-text-field>
+                <v-text-field label="title..." v-model="position.title" required="true"></v-text-field>
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
@@ -27,7 +27,7 @@ export default {
             position: {},
         }
     },
-    created(){
+    created() {
     },
     methods: {
         setData(position) {
@@ -36,14 +36,14 @@ export default {
             this.dialog = true
             console.log(this.position.title);
         },
-        save(){
-            if(this.position.id > 0){
+        save() {
+            if (this.position.id > 0) {
                 this.update()
-            }else{
+            } else {
                 this.create()
             }
         },
-        async create(){
+        async create() {
             try {
                 const res = await this.$store.dispatch('position/create', this.position)
                 this.$toast.success(res.message)
@@ -56,11 +56,11 @@ export default {
         async update() {
             try {
                 const res = await this.$store.dispatch('position/update', this.position)
+                this.$emit('reload')
                 this.$toast.success(res.data.message)
-                this.$emit('reload');
                 this.closeDialog()
             } catch (error) {
-                this.$toast.error(Object.values(error.response.data.message)[0][0])
+                this.$toast.error(error.response&&error.response.data.message)
             }
         },
         closeDialog() {

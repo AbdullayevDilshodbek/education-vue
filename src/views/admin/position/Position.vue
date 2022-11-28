@@ -3,7 +3,7 @@
         <div class="ma-3 mb-0">
             <div class="d-flex justify-between">
                 <div>
-                    <v-text-field style="width:250px; display: :inline-block;" label="Search..."
+                    <v-text-field style="width:250px; display: inline-block;" label="Search..."
                         v-model="payload.search" v-on:keyup.enter="get()" outlined dense></v-text-field>
                 </div>
                 <v-spacer></v-spacer>

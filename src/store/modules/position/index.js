@@ -10,21 +10,28 @@ const state = {
     positions: []
 }
 const getters = {
-    get: state => state.data
+    get: state => state.data,
+    allPositions: state => state.positions
 }
 const mutations = {
-    'SET_POSITIONS': (state, data) => state.data = data
+    'SET_POSITIONS': (state, data) => state.data = data,
+    'SET_ALL_POSITIONS': (state, data) => state.positions = data.data
 }
 const actions = {
-    async get({commit}, payload){
-        const res = await axios.get(`/positions?page=${payload.page}`, {
-            params: {
-                search: payload.search
-            }
-        })
-        commit('SET_POSITIONS', res.data)
+    async get({ commit }, payload) {
+        try {
+            const res = await axios.get(`/positions?page=${payload.page}`, {
+                params: {
+                    search: payload.search
+                }
+            })
+            commit('SET_POSITIONS', res.data)
+            return Promise.resolve(res.data)
+        } catch (error) {
+            return Promise.reject(error)
+        }
     },
-    async create({}, payload){
+    async create({ }, payload) {
         try {
             const res = await axios.post('/positions', payload)
             return Promise.resolve(res.data);
@@ -32,7 +39,7 @@ const actions = {
             return Promise.reject(error)
         }
     },
-    async update({}, payload){
+    async update({ }, payload) {
         try {
             const res = await axios.put(`/positions/${payload.id}`, payload)
             return Promise.resolve(res.data)
@@ -40,9 +47,18 @@ const actions = {
             return Promise.reject(error)
         }
     },
-    async changeActive({}, id){
+    async changeActive({ }, id) {
         try {
             const res = await axios.put(`position/change_active/${id}`)
+            return Promise.resolve(res.data)
+        } catch (error) {
+            return Promise.reject(error)
+        }
+    },
+    async allPositions({commit}){
+        try {
+            const res = await axios.get('position/for_auto_complete') 
+            commit('SET_ALL_POSITIONS', res.data)
             return Promise.resolve(res.data)
         } catch (error) {
             return Promise.reject(error)

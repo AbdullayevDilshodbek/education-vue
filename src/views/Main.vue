@@ -38,6 +38,7 @@ export default {
     links: [
       ['mdi-inbox-arrow-down', 'Organization', '/'],
       ['mdi-file-powerpoint-box', 'Position', '/position'],
+      ['mdi-account-group', 'User', '/user'],
     ],
     user: ''
   }),

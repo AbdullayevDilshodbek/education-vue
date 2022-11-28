@@ -23,7 +23,12 @@ const routes = [
         path: '/position',
         name: 'position',
         component: () => loadView('admin/position/Position.vue')
-      }
+      },
+      {
+        path: '/user',
+        name: 'user',
+        component: () => loadView('admin/user/User.vue')
+      },
     ]
   },
   {
